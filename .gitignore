@@ -4,6 +4,7 @@ dist
 dist/**
 *.log
 */*.log
+docker-compose.override.yml
 
 # Jest coverage files
 coverage/

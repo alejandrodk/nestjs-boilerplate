@@ -1,0 +1,30 @@
+version: "3.4"
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ../data/mongodb:/data/db
+
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: app
+    command: >
+      bash -c "cd /app && yarn start"
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    volumes:
+      - ./:/app/
+      - ./node_modules
+    environment: 
+      # not use in production
+      DOCKER_BUILDKIT: 1
