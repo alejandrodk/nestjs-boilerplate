@@ -1,6 +1,6 @@
 # NestJs + MongoDB example integration
 
-1. Install dependencies via `yarn`
+1. Install dependencies running `yarn`
 2. Run `docker-compose up -d` to start containers
 3. Example API is running on localhost:5000
 
