@@ -1,75 +1,84 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# NestJs + MongoDB example integration
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+1. Install dependencies via `yarn`
+2. Run `docker-compose up -d` to start containers
+3. Example API is running on localhost:5000
 
-## Description
+# Available routes:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+|method|endpoint|description|params|
+|:-----|:-----|:-----|:-----|
+|GET|/author|finds all authors| |
+|GET|/author/:id|finds author by id| |
+|POST|/author|creates new author| |
+|PUT|/author/:id|updates author by id| |
 
-## Installation
+|method|endpoint|description|params|
+|:-----|:-----|:-----|:-----|
+|GET|/book|finds all books| |
+|GET|/book/:id|finds book by id| |
+|POST|/book|creates new book| |
+|PUT|/book/:id|updates book by id |
 
-```bash
-$ npm install
+# Project Structure
+```sh
+    src
+    |_ application
+        |_ controllers
+        |_ dtos
+    |_ domain
+        |_ entities
+        |_ modules (for entities)
+        |_ services
+    |_ infrastructure
+        |_ config
+        |_ database
+        |_ modules (for app module)
+        |_ repositories
+        
 ```
+### - Application
 
-## Running the app
+This layer should limit your responsibilities to the following tasks:  
 
-```bash
-# development
-$ npm run start
+1. Execute access control policies (authentication, authorization, etc.)
+2. Validating user input
+3. Send calls or commands to the appropriate service method
+4. Transform entities returned by the service into data transfer objects (DTO) for output / serialization
 
-# watch mode
-$ npm run start:dev
+###### Controllers
+It receives the requests made to the server and uses the ***services*** to send responses to the client.
 
-# production mode
-$ npm run start:prod
-```
 
-## Test
+###### DTOs
+As its name indicates, it is an object that will be used to ***transfer information*** and represents the object that will be sent to the client, this is the object that our API will return to the rest of the services, either For internal use or for third parties, so we can have multiple DTOs for each entity according to the use we need.
+It is also used to define the type of objects to be received by the controllers
 
-```bash
-# unit tests
-$ npm run test
+- The DTO should have only data, ***should not to have any type of business logic***.
+- May have references to other DTOs
 
-# e2e tests
-$ npm run test:e2e
+### - Domain
+Contains all domain level concerns, this includes ***business logic***, and domain objects (Entities)
+>Transformation to DTOs should be done exclusively at the edge (our controllers), because that is where serialization happens and also because, depending on our project requirements, several controllers or services can call these methods and they will want to deal with the purest form of the data.
 
-# test coverage
-$ npm run test:cov
-```
+###### Entities
+Represents an object in the database and encapsulates key rules related to that object, so it can contain some logic to ***validate its properties*** but ***not*** complex business logic.
 
-## Support
+- An entity must always represent the ***object in the database***, so it must not have more or less properties than the object it represents.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+###### Services
+It contains the business logic which provides controllers (or other services) to be used.
 
-## Stay in touch
+- Your methods can receive both ***Entities*** and ***Data***
+- They should always return ***entities*** that will be converted into ***DTOs*** by the controller
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### - Infraestructure
+###### Repositories
 
-## License
+>According to Martin Fowler, the Repository Pattern can be described as:
+Mediates between the domain and data mapping layers using a collection-like interface for accessing domain objects.
+So a repository will generally have methods such as findOne, findAll, remove, and such. Your service layer will manipulate the collection through these repository methods. Their implementation is not a concern to our business logic.
 
-  Nest is [MIT licensed](LICENSE).
+The repository is an intermediary between the domain and the data source and ***provides the services with the basic extraction operations (CRUD)*** (findOne, findAll, updateOne, remove).
+
+When using TypeOrm, the CRUD methods are injected by the ORM to our repository, being able to define more specific methods (that do not imply business logic) in the repository file.
