@@ -2,7 +2,7 @@
   "name": "nestjs-boilerplate",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Alejandro Barrios",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -21,12 +21,26 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^7.0.0",
-    "@nestjs/core": "^7.0.0",
-    "@nestjs/platform-express": "^7.0.0",
+    "@nestjs/common": "^7.4.4",
+    "@nestjs/core": "^7.4.4",
+    "@nestjs/mongoose": "^7.1.2",
+    "@nestjs/platform-express": "^7.4.4",
+    "@types/faker": "^5.1.4",
+    "@types/mongoose": "^5.10.2",
+    "@types/morgan": "^1.9.2",
+    "@types/uuidv4": "^5.0.0",
+    "class-transformer": "^0.3.1",
+    "class-validator": "^0.12.2",
+    "dotenv": "^8.2.0",
+    "faker": "^5.1.0",
+    "mongoose": "5.10",
+    "morgan": "^1.10.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.5.4"
+    "rxjs": "^6.6.3",
+    "start-server-webpack-plugin": "^2.2.5",
+    "tsc-watch": "^4.2.9",
+    "uuidv4": "^6.2.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",
